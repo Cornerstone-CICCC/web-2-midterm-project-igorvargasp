@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Search, Bell, User } from "lucide-react";
 
-export const Navbar = () => {
+export const Navbar = ({ setSearch, search }) => {
   const [activeNav, setActiveNav] = useState("Movies");
   const [searchOpen, setSearchOpen] = useState(false);
   return (
@@ -44,6 +44,8 @@ export const Navbar = () => {
                   type="text"
                   placeholder="Search..."
                   autoFocus
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   onBlur={() => setSearchOpen(false)}
                   className="bg-[#1a1a24] border border-gray-700 rounded-md pl-10 pr-4 py-1.5 text-sm focus:outline-none focus:border-gray-500 w-64 text-white placeholder-gray-500"
                 />
