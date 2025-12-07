@@ -1,9 +1,21 @@
 import { useState } from "react";
-import { Search, Bell, User } from "lucide-react";
+import { Search, Bell, User, Menu, X } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 export const Navbar = ({ setSearch, search }) => {
   const [activeNav, setActiveNav] = useState("Movies");
   const [searchOpen, setSearchOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  const navItems = [
+    "Home",
+    "TV Shows",
+    "Movies",
+    "New & Popular",
+    "My list",
+    "About",
+  ];
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-linear-to-b from-[#0a0a0f] via-[#0a0a0f]/95 to-transparent w-full">
       <div className="w-full">
@@ -12,26 +24,38 @@ export const Navbar = ({ setSearch, search }) => {
             <h1 className="text-2xl font-bold text-white tracking-wider">
               I<span className="text-red-600">MOVIE</span>
             </h1>
+            {/* Desktop Nav */}
             <nav className="hidden md:flex items-center gap-10">
-              {["Home", "TV Shows", "Movies", "New & Popular", "My list"].map(
-                (item) => (
-                  <button
-                    key={item}
-                    onClick={() => setActiveNav(item)}
-                    className={`text-sm font-medium transition-colors relative pb-1 ${
-                      activeNav === item
-                        ? "text-white"
-                        : "text-gray-400 hover:text-gray-200"
-                    }`}
-                  >
-                    {item}
-                    {activeNav === item && (
-                      <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-white rounded-full"></div>
-                    )}
-                  </button>
-                ),
-              )}
+              {navItems.map((item) => (
+                <NavLink
+                  key={item}
+                  to={
+                    item === "Home"
+                      ? "/"
+                      : `/${item.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-")}`
+                  }
+                  onClick={() => setActiveNav(item)}
+                  className={`text-sm font-medium transition-colors relative pb-1 ${
+                    activeNav === item
+                      ? "text-white"
+                      : "text-gray-400 hover:text-gray-200"
+                  }`}
+                >
+                  {item}
+                  {activeNav === item && (
+                    <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-white rounded-full"></div>
+                  )}
+                </NavLink>
+              ))}
             </nav>
+            {/* Hamburger Icon */}
+            <button
+              className="md:hidden text-gray-300 hover:text-white transition-colors"
+              onClick={() => setMobileNavOpen((prev) => !prev)}
+              aria-label="Toggle navigation"
+            >
+              {mobileNavOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
           </div>
           <div className="flex items-center gap-6">
             {searchOpen ? (
@@ -67,6 +91,27 @@ export const Navbar = ({ setSearch, search }) => {
             </div>
           </div>
         </div>
+        {/* Mobile Nav */}
+        {mobileNavOpen && (
+          <nav className="md:hidden bg-[#0a0a0f] px-8 py-4 flex flex-col gap-4">
+            {navItems.map((item) => (
+              <button
+                key={item}
+                onClick={() => {
+                  setActiveNav(item);
+                  setMobileNavOpen(false);
+                }}
+                className={`text-base font-medium transition-colors ${
+                  activeNav === item
+                    ? "text-white"
+                    : "text-gray-400 hover:text-gray-200"
+                }`}
+              >
+                {item}
+              </button>
+            ))}
+          </nav>
+        )}
       </div>
     </header>
   );
